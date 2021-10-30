@@ -41,6 +41,7 @@ import org.jpl7.Term;
  *
  * @author Daniel Diaz, Daniel Villatoro
  */
+// Clase principal del proyecto
 public class principal extends javax.swing.JFrame {
 
     JButton btnSugerencia =   new JButton("Sugerencia");
@@ -59,7 +60,8 @@ public class principal extends javax.swing.JFrame {
     int cantidadVerificaciones = 0;
 
     /**
-     * Creates new form principal
+     * Metodo principal, aqui se encuentran las operaciones para mostrar el tablero, ademas de la funcionalidad
+     * de los botones.
      */
     public principal() {
         initComponents();
@@ -123,7 +125,9 @@ public class principal extends javax.swing.JFrame {
     }
     
     
-    
+    // Se validad el gane.
+    // E: NA
+    // S: Falso si aun existen errores. True si esta finalizado
     public boolean validarGane(){
         int cantidadErrores = 0;
         String tablero[][] = returnTablero();
@@ -139,7 +143,10 @@ public class principal extends javax.swing.JFrame {
         }
         return true;
     }
-    
+
+    // Muestran mensaje de sudoku completado.
+    // E: NA
+    // S: NA
     public void mostrarMensajeVerificaciones(){
         if(validarGane()){
             JOptionPane.showMessageDialog(jPanel1,
@@ -158,6 +165,9 @@ public class principal extends javax.swing.JFrame {
             return;
     }
     
+    //Obtiene los espacios vacios del tablero en donde los campos sean iguales a _.
+    // E: NA
+    // S: Obtiene los espacios vacios
     public int getEspaciosVacios(){
         String tablero[][] = returnTablero();
         int espaciosVacios=0;
@@ -173,7 +183,9 @@ public class principal extends javax.swing.JFrame {
         return espaciosVacios;
     }
     
-    
+    //Obtiene los errores en donde el espacio x sea diferente a la matriz final.
+    // E: NA
+    // S: Obtiene los errores.
     public int getErrores(){
         int cantidadErrores = 0;
         String tablero[][] = returnTablero();
@@ -191,7 +203,9 @@ public class principal extends javax.swing.JFrame {
         return cantidadErrores;
     }
     
-    
+    //Limpia los valores para un nuevojuego.
+    // E: NA
+    // S: NA.
     public void nuevoJuego(){
          flagSugerencias = false;
         flagTableroInicio = true;
@@ -206,9 +220,10 @@ public class principal extends javax.swing.JFrame {
         }
     }
     
-    
-    public void sugerencia(){
-        
+    //Ingresa las sugerencias en el tablero de juego
+    // E: NA
+    // S: NA.
+    public void sugerencia(){    
         String tablero[][] = returnTablero();
         String verify = String.format("sudoku(%s,T)", Arrays.deepToString(tablero));
         Query verifyBoard = new Query(verify);
@@ -233,7 +248,9 @@ public class principal extends javax.swing.JFrame {
 
     }
     
-    
+    //Ingresa todas las soluciones en el tablero de juego
+    // E: NA
+    // S: NA.
     public void llenarTableroSolucion(){
         Font font1 = new Font("SansSerif", Font.BOLD, 35);
         for(int i =0; i<9;i++){
@@ -248,6 +265,9 @@ public class principal extends javax.swing.JFrame {
         }
     }
     
+    //Ingresa las pistas en el tablero de juego y valida si ya no existen sugerencias.
+    // E: NA
+    // S: NA.
     public void colocarPistas(){
         
         if(cantidadSugerencias == 5){
@@ -286,10 +306,12 @@ public class principal extends javax.swing.JFrame {
         JTextField field = fields[xR][yR];
         field.setText(Integer.toString(valor));
         field.setForeground(Color.GREEN);
-
-        
+        cantidadSugerencias++;    
     }
     
+    //Comprueba el tablero si es valido para poder agregarlo visualmente.
+    // E: NA
+    // S: NA.
     public void comprobarTablero(){
         System.out.println("entra");
         boolean flag = true;
@@ -314,7 +336,9 @@ public class principal extends javax.swing.JFrame {
         
     }
     
-    
+    //Llena el tablero.
+    // E: NA
+    // S: NA.
     public void llenarTablero(String tablero[][]){
         for(int i =0; i<9;i++){
             for(int j=0;j<9;j++){
@@ -338,7 +362,9 @@ public class principal extends javax.swing.JFrame {
         }
     }
     }
-    
+    //Genera y llena el tablero.
+    // E: NA
+    // S: NA.
     public String[][] generarTablero(){
         int tablero[][]= new int[9][9];
         String tableroString[][] = new String[9][9];
@@ -378,7 +404,9 @@ public class principal extends javax.swing.JFrame {
          }
     }
         
-    
+    //Reinicia el tablero a su estado inicial
+    // E: NA
+    // S: NA.
     public void reiniciar(){
         for(int i =0; i<9;i++){
             for(int j=0;j<9;j++){
@@ -392,6 +420,9 @@ public class principal extends javax.swing.JFrame {
         cantidadDigitos = 0;
     }
     
+    //Cambia los ceros por _.
+    // E: NA
+    // S: NA.
     public String[][] formatoTablero(int tablero[][]){
         String tableroString[][] = new String[9][9];
         String valor;
@@ -407,6 +438,9 @@ public class principal extends javax.swing.JFrame {
         return tableroString;
     }
     
+    //Marca la primer diagonal de un color gris
+    // E: NA
+    // S: NA.
     public void marcarDiagonal1(){
         Font font1 = new Font("SansSerif", Font.BOLD, 35);
        
@@ -427,6 +461,10 @@ public class principal extends javax.swing.JFrame {
         }
        
     }
+        
+    //Marca la segunda diagonal de un color gris
+    // E: NA
+    // S: NA.
     public void marcarDiagonal2(){
         Font font1 = new Font("SansSerif", Font.BOLD, 35);
        
@@ -448,7 +486,9 @@ public class principal extends javax.swing.JFrame {
        
     }
     
-    
+    //Obtiene el tablero
+    // E: NA
+    // S: NA.
     public String[][] returnTablero(){
         String tablero[][] = new String[9][9];
         for(int i =0; i<9;i++){
