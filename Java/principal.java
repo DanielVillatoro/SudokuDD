@@ -39,7 +39,7 @@ import org.jpl7.Term;
 
 /**
  *
- * @author Daniel Diaz
+ * @author Daniel Diaz, Daniel Villatoro
  */
 public class principal extends javax.swing.JFrame {
 
@@ -56,26 +56,25 @@ public class principal extends javax.swing.JFrame {
     int resultadoTableroFinal[][] = new int[9][9];
     boolean flagSugerencias = false;
     int cantidadDigitos = 0;
+    int cantidadVerificaciones = 0;
 
     /**
      * Creates new form principal
      */
     public principal() {
         initComponents();
-//        JFrame frame = new JFrame();
-//        jPanel2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(new SudokuBoard(false));
         
         jPanel2.add(new MenuPane(), BorderLayout.AFTER_LINE_ENDS);
-//        jPanel2.pack();
+
         jPanel2.setVisible(true);
         
         jPanel4.setLayout(new BorderLayout());
         jPanel4.add(new SudokuBoard(true));
         
-//        jPanel2.add(new MenuPane(), BorderLayout.AFTER_LINE_ENDS);
-//        jPanel2.pack();
+
         jPanel4.setVisible(true);
         
         
@@ -84,6 +83,8 @@ public class principal extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) { 
               nuevoJuego();
               comprobarTablero();
+              cantidadDigitos = 0;
+              jTextField5.setText(Integer.toString(cantidadDigitos));
               
             } 
         } );
@@ -91,8 +92,10 @@ public class principal extends javax.swing.JFrame {
        
         btnVerificar.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
-              System.out.println(getEspaciosVacios());
-              System.out.println(getErrores());
+               cantidadVerificaciones++;
+              jTextField1.setText(Integer.toString(cantidadVerificaciones));
+              jTextField2.setText(Integer.toString(getErrores()));
+              mostrarMensajeVerificaciones();
             } 
         } );
         btnSugerencia.addActionListener(new ActionListener() { 
@@ -107,6 +110,8 @@ public class principal extends javax.swing.JFrame {
         btnReiniciar.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
               reiniciar();
+              cantidadDigitos = 0;
+              jTextField5.setText(Integer.toString(cantidadDigitos));
             } 
         } );
         marcarDiagonal1();
@@ -118,6 +123,40 @@ public class principal extends javax.swing.JFrame {
     }
     
     
+    
+    public boolean validarGane(){
+        int cantidadErrores = 0;
+        String tablero[][] = returnTablero();
+        for(int i =0; i<9;i++){
+            for(int j=0;j<9;j++){
+                if(!tablero[i][j].equals(Integer.toString(resultadoTableroFinal[i][j]))){
+                   return false;
+                }
+
+
+                        
+            }
+        }
+        return true;
+    }
+    
+    public void mostrarMensajeVerificaciones(){
+        if(validarGane()){
+            JOptionPane.showMessageDialog(jPanel1,
+            "Juego terminado con exito, Sudoku completado!! ",
+            "Verififacion",
+            JOptionPane.INFORMATION_MESSAGE);
+            jTextField4.setText("Exitosa");
+            return;
+        }
+        int errores = getErrores();
+        int vacios = getEspaciosVacios();
+        JOptionPane.showMessageDialog(jPanel1,
+            "Hay " + Integer.toString(errores) + " digitos incorrectos y "+Integer.toString(vacios)+" espacios vacios! ",
+            "Verififacion",
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+    }
     
     public int getEspaciosVacios(){
         String tablero[][] = returnTablero();
@@ -171,7 +210,6 @@ public class principal extends javax.swing.JFrame {
     public void sugerencia(){
         
         String tablero[][] = returnTablero();
-//         System.out.println("Tablero a prolog:" + Arrays.deepToString(tablero));
         String verify = String.format("sudoku(%s,T)", Arrays.deepToString(tablero));
         Query verifyBoard = new Query(verify);
         java.util.Map<String, Term> res;
@@ -184,18 +222,15 @@ public class principal extends javax.swing.JFrame {
             String objeto = tableroFinal[i].toString();
             int[] arr = Arrays.stream(objeto.substring(1, objeto.length()-1).split(","))
             .map(String::trim).mapToInt(Integer::parseInt).toArray();
-//            System.out.println(Arrays.toString(arr));
-            
+
             System.arraycopy(arr,0,tableroLista[i],0,arr.length);
         }
-//        System.out.println(Arrays.toString(tableroLista));
-//        colocarPistas(tableroLista);
+
         for(int i =0; i<9;i++){
              System.arraycopy(tableroLista[i], 0, resultadoTableroFinal[i], 0,9);
          }
         flagSugerencias = true;
-        
-//        return tableroLista;
+
     }
     
     
@@ -237,14 +272,11 @@ public class principal extends javax.swing.JFrame {
                     posicionesX[cont] = x ;
                     posicionesY[cont] = y;
                     cont++;
-//                    flag = true;
-//                    break;
+
                 }
                         
             }
-//            if(flag){
-//                break;
-//            }
+
         }
         int posRandom =   (int)Math.floor(Math.random()*(cont-0+1)+0);
         int xR = posicionesX[posRandom];
@@ -254,7 +286,7 @@ public class principal extends javax.swing.JFrame {
         JTextField field = fields[xR][yR];
         field.setText(Integer.toString(valor));
         field.setForeground(Color.GREEN);
-        cantidadSugerencias++;
+
         
     }
     
@@ -290,13 +322,13 @@ public class principal extends javax.swing.JFrame {
                 field.setText(tablero[i][j]);
                 field.getDocument().addDocumentListener(new DocumentListener() {
                 public void changedUpdate(DocumentEvent e) {
-//                  System.out.println("cambio");
+
                 }
                 public void removeUpdate(DocumentEvent e) {
-//                  System.out.println("cambio1");
+
                 }
                 public void insertUpdate(DocumentEvent e) {
-//                  System.out.println("cambio2");
+
                     cantidadDigitos++;
                     jTextField5.setText(Integer.toString(cantidadDigitos));
                     
@@ -332,9 +364,7 @@ public class principal extends javax.swing.JFrame {
             
 
         }
-        
-//       System.out.println(Arrays.deepToString(formatoTablero(tablero)));
-        
+
        if(flagTableroInicio){
            copiarTablero(formatoTablero(tablero));
            
@@ -346,7 +376,6 @@ public class principal extends javax.swing.JFrame {
          for(int i =0; i<9;i++){
              System.arraycopy(tablero[i], 0, tableroInicial[i], 0,9);
          }
-//         System.out.println(Arrays.deepToString(tableroInicial));
     }
         
     
@@ -425,12 +454,11 @@ public class principal extends javax.swing.JFrame {
         for(int i =0; i<9;i++){
             for(int j=0;j<9;j++){
                 JTextField field = fields[i][j];
-//                System.out.println(field.getText());
                 tablero[i][j] = field.getText();
                         
             }
         }
-//        System.out.println(Arrays.deepToString(tablero));
+
         return tablero;
     }
   
@@ -512,9 +540,11 @@ public class principal extends javax.swing.JFrame {
 
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextField1.setText("0");
 
         jTextField2.setEditable(false);
         jTextField2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextField2.setText("0");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -523,12 +553,15 @@ public class principal extends javax.swing.JFrame {
 
         jTextField3.setEditable(false);
         jTextField3.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextField3.setText("0");
 
         jTextField4.setEditable(false);
         jTextField4.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextField4.setText("Juego en curso");
 
         jTextField5.setEditable(false);
         jTextField5.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextField5.setText("0");
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);
@@ -659,9 +692,7 @@ public class principal extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new principal().setVisible(true);
@@ -709,9 +740,7 @@ public class principal extends javax.swing.JFrame {
             add(btnReiniciar, gbc);
             gbc.gridy++;
             add(btnVerificar, gbc);
-            gbc.gridy++;
-            add(btnSolucion, gbc);
-            
+        
             
 
         }
@@ -726,7 +755,7 @@ public class principal extends javax.swing.JFrame {
         public static final int GRID_COLUMNS = 1;
         public static final int BOARD_ROWS = 9;
         public static final int BOARD_COLUMNS = 9;
-//        public JTextField fields[][];
+
 
         public SudokuBoard(boolean solucion) {
             if(solucion){
