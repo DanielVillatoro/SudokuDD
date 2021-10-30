@@ -1,5 +1,5 @@
 % PROYECTO 3 DANIEL DANIEL
-:- use_module(library(clpfd)). %Libreria para conectar con modulos de JAVA.
+:- use_module(library(clpfd)). %Libreria para realizar difentes operaciones sobre el conjunto de los numeros reales.
 
 %Funcion inicial que obtiene la matriz final del juego, con la solucion de la misma
 %si la matriz inicial o tablero inicial es incorrecto, retorna falso.
